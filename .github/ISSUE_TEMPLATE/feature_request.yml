@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose a focused improvement or simpler use case.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Use case and current difficulty
+      description: Describe what you need to accomplish and the code you currently write.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior or API
+      description: Include an example and any platform or lifecycle requirements.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and tradeoffs
+      description: Consider runtime dependencies, download size, compatibility, and maintenance.

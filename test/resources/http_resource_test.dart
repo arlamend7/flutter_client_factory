@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_client/resources.dart';
+import 'package:flutter_client_factory/resources.dart';
 import 'package:test/test.dart';
 
 void main() {

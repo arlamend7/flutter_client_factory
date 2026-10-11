@@ -1,4 +1,4 @@
-import 'package:flutter_client/flutter_client.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
 
 Future<void> main(List<String> arguments) async {
   if (arguments.isEmpty) throw ArgumentError('Provide an HTTP endpoint.');

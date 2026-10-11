@@ -17,6 +17,10 @@ class HttpHeaders {
     return HttpHeaders._(normalized);
   }
 
+  /// Validated single-value headers for common request and response inputs.
+  factory HttpHeaders.single(Map<String, String> values) =>
+      HttpHeaders(values.map((name, value) => MapEntry(name, [value])));
+
   HttpHeaders._(Map<String, List<String>> values)
       : values = Map<String, List<String>>.unmodifiable(
           values.map((name, entries) =>

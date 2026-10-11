@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:flutter_client/downloads.dart';
-import 'package:flutter_client/flutter_client.dart';
+import 'package:flutter_client_factory/downloads.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
 
 Future<void> main(List<String> arguments) async {
   if (arguments.length != 2) {
@@ -12,8 +12,7 @@ Future<void> main(List<String> arguments) async {
   final transport = createPlatformTransport();
   final client = HttpClientService(transport: transport);
   try {
-    final file = await ResumableDownloader(client)
-        .download(Uri.parse(arguments[0]), File(arguments[1]));
+    final file = await client.downloadFile(arguments[0], File(arguments[1]));
     stdout.writeln('Completed ${file.path}: ${await file.length()} bytes');
   } finally {
     client.dispose();

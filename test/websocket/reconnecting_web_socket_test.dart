@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter_client/websocket.dart';
+import 'package:flutter_client_factory/websocket.dart';
 import 'package:test/test.dart';
 import '../fixtures/memory_web_socket_connection.dart';
 

@@ -1,28 +1,72 @@
 # Usage and lifecycle
 
+See [convenience APIs](conveniences.md) for request verbs, responses, forms,
+testing, timeouts, and optional feature shortcuts.
+
+## Register with named options
+
+```dart
+factory.registerClient(
+  'api',
+  baseUrl: 'https://example.com/api/',
+  defaultHeaders: {'Accept': 'application/json'},
+  interceptors: [authentication.intercept, logging.intercept],
+  transportLifetime: const Duration(minutes: 5),
+  configure: (client) {
+    client.defaultHeaders['X-App-Version'] = appVersion;
+    // All named settings are also available here for further customization.
+  },
+);
+```
+
+All arguments except the name are optional. `createTransport` defaults to the
+platform transport and is not called until the first send. `timeout` sets an
+overall request deadline, including retries and response-body consumption. Supply a builder for
+tests or custom platform settings. `onEvent` is available both as a named argument
+and on the callback builder. Base URLs must be absolute HTTP(S) URLs without
+embedded credentials; omit the base URL when every request has an absolute URI.
+
+Named arguments initialize the builder, then `configure` runs synchronously once
+before the registration is validated and saved. Callback assignments override
+named values. Header names are case-insensitive. Adding interceptors appends to the
+supplied list; call `client.interceptors.clear()` first to replace it. Input maps
+and lists are copied, and later builder mutations do not affect registered clients.
+Stateful interceptor instances still have the owners you supplied. A failing
+callback or invalid configuration leaves no partial registration.
+
+The existing `register(name, ClientRegistration(...))` API remains available for
+advanced configuration, including `Uri` values and multivalue `HttpHeaders`.
+
 ## Compose policies deliberately
 
 ```dart
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/resilience.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/resilience.dart';
 
 final factory = DefaultHttpClientFactory();
 final overall = TimeoutInterceptor(const Duration(seconds: 20));
 final retry = RetryInterceptor();
 final concurrency = ConcurrencyInterceptor(maxConcurrent: 4, maxQueued: 30);
 final attempt = TimeoutInterceptor(const Duration(seconds: 5), phase: 'attempt');
-factory.register('api', ClientRegistration(
-  createTransport: createPlatformTransport,
-  options: HttpClientOptions(
-    baseUri: Uri.parse('https://api.example.com/v1/'),
-    interceptors: [overall.intercept, concurrency.intercept, retry.intercept],
-    attemptInterceptors: [attempt.intercept],
-  ),
-));
+factory.registerClient(
+  'api',
+  baseUrl: 'https://api.example.com/v1/',
+  interceptors: [
+    overall.intercept,
+    concurrency.intercept,
+    retry.intercept,
+    attempt.intercept,
+  ],
+);
 ```
 
-The first interceptor is outermost. An operation deadline outside retry includes
-backoff and all attempts. An attempt timeout resets per dispatch. Both cover body
+There is one ordered `interceptors` list. The first interceptor is outermost;
+responses unwind in reverse order. Calling `next` again repeats only the remaining
+interceptors. An operation deadline before retry includes backoff and all attempts.
+A timeout after retry resets for each retry attempt. To run a policy on every
+transport send, put it after all retry, auth refresh, failover and hedging policies.
+An interceptor that returns a cached or synthetic response skips everything after
+it, including the transport. Both timeout placements cover body
 consumption. Queues and circuit breakers are stateful: reuse the intended instance.
 A permit covers the response lifetime, so unread responses can exhaust concurrency.
 Retries dispose failed responses before another attempt and respect replayability.

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io' as io;
 
-import 'package:flutter_client/sockets.dart';
-import 'package:flutter_client/websocket_io.dart';
+import 'package:flutter_client_factory/sockets.dart';
+import 'package:flutter_client_factory/websocket_io.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/resilience.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/resilience.dart';
 import 'package:test/test.dart';
 
 void main() {

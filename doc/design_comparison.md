@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | .NET named/typed clients | DefaultHttpClientFactory, createTyped | Constructor injection; no container required |
 | .NET handler reuse/lifetime | Lazy shared transport leases and retirement | Pool mechanics are owned by each SDK transport |
-| .NET outgoing handlers | Ordered operation/attempt interceptors | Plain Dart functions and interfaces |
+| .NET outgoing handlers | One ordered interceptor pipeline | Placement controls which policies repeat on resend |
 | .NET logging/resilience composition | Diagnostics and optional resilience imports | No mandatory logging or policy framework |
 | Angular immutable requests/context | HttpRequest.copyWith, HttpHeaders, typed RequestContext | Body replayability is explicit |
 | Angular functional interceptors | HttpInterceptor / HttpMiddleware | Future and Stream semantics |

@@ -17,7 +17,7 @@ def main():
     files += sorted(root.glob("test/**/*.dart"))
     files += sorted(root.glob("tool/**/*.dart"))
     files += [p for p in root.glob("packages/**/*.dart")
-              if not any(part in {'.dart_tool', 'build'} for part in p.parts)]
+              if not any(part in {'.dart_tool', 'build', '.widget_preview'} for part in p.parts)]
 
     for path in files:
         text = path.read_text()
@@ -33,7 +33,7 @@ def main():
             errors.append(f"{path.relative_to(root)}: declaration/file mismatch")
 
         for target in re.findall(r"^(?:import|export)\s+'([^']+)'", text, re.MULTILINE):
-            if target.startswith("package:flutter_client/"):
+            if target.startswith("package:flutter_client_factory/"):
                 resolved = root / "lib" / target.split("/", 1)[1]
             elif ":" in target:
                 continue
@@ -43,7 +43,7 @@ def main():
                 errors.append(f"{path.relative_to(root)}: missing {target}")
 
         if path.is_relative_to(root / "lib"):
-            if re.search(r"(?:import|export)\s+'package:(?!flutter_client/)", text):
+            if re.search(r"(?:import|export)\s+'package:(?!flutter_client_factory/)", text):
                 errors.append(f"{path.relative_to(root)}: external runtime dependency")
 
     if errors:

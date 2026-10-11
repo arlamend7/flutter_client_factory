@@ -1,7 +1,7 @@
 import 'dart:io' as io;
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/sse.dart';
-import 'package:flutter_client/websocket_io.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/sse.dart';
+import 'package:flutter_client_factory/websocket_io.dart';
 
 Future<void> main() async {
   final server = await io.HttpServer.bind(io.InternetAddress.loopbackIPv4, 0);
@@ -19,8 +19,9 @@ Future<void> main() async {
   final client = HttpClientService(transport: transport);
   final origin = Uri.parse('http://127.0.0.1:${server.port}');
   try {
-    final events = ServerSentEventsClient(client, maxReconnects: 0);
-    await for (final event in events.connect(origin.resolve('/events'))) {
+    await for (final event in client.serverSentEvents(
+        origin.resolve('/events').toString(),
+        maxReconnects: 0)) {
       io.stdout.writeln(event.data);
     }
     final socket = await IoWebSocketConnection.connect(

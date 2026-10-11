@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation and examples
+    url: https://github.com/arlamend7/flutter_client_factory#examples-and-guidance
+    about: Start with the README and progressive use-case guides.
+  - name: Security reporting guidance
+    url: https://github.com/arlamend7/flutter_client_factory/blob/main/SECURITY.md
+    about: Read this before reporting a vulnerability.

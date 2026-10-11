@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter_client/websocket.dart';
+import 'package:flutter_client_factory/websocket.dart';
 
 class MemoryWebSocketConnection implements WebSocketConnection {
   final StreamController<Object> incoming = StreamController();

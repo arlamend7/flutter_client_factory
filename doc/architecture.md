@@ -9,7 +9,7 @@ code generation, plugin registration, or third-party runtime dependency.
 
 ```text
 lib/
-  flutter_client.dart       core HTTP/factory public API and conditional transport
+  flutter_client_factory.dart       core HTTP/factory public API and conditional transport
   <feature>.dart            focused, optional public entry points
   src/
     core/                   cancellation, errors, typed local request context
@@ -27,26 +27,55 @@ lib/
     sockets/io/             TCP, TLS and UDP adapters
     resources/              current loading/data/error state and refresh lifecycle
     testing/                fake transport and captured-request control
-packages/flutter_client_widgets/
+packages/flutter_client_factory_widgets/
   lib/src/resources/services/   optional Flutter ValueNotifier bridge
 example/lib/                runnable composition roots, models, typed services
 ```
 
 Within each context: `contracts` defines boundaries, `models` holds data,
 `configuration` validates options, `services` orchestrates state, `middleware`
-composes requests, `helpers` performs deterministic feature-specific work, and
+composes requests, `extensions` adds conveniences over existing contracts,
+`helpers` performs deterministic feature-specific work, and
 `defaults` holds built-in policies. Sample configuration belongs in `example`.
 Every class, enum, extension type and typedef lives in its own named file.
 `tool/check_structure.py` verifies this convention. No generic utilities bucket.
 
 ## Request flow
 
+The core barrel exports `HttpClientFactoryRegistration.registerClient` and
+`HttpClientRegistrationBuilder`. The extension accepts named settings, applies an
+optional synchronous callback once, validates the final values, then delegates to
+the existing `register` contract. Headers and interceptor lists are copied into the
+registration snapshot; later builder mutations cannot change it. Default headers
+use case-insensitive single-value keys; the existing `ClientRegistration` and
+`HttpHeaders` path remains available for multivalue defaults. The default platform
+transport is built only when dispatched. No DI container is required.
+
+Convenience APIs are thin adapters, not parallel pipelines:
+
+- `http/extensions` provides client verbs, immutable request transformations, and
+  response reading/ownership methods; all verbs call the existing `send` contract.
+- `http/helpers/request_deadline.dart` owns the linked cancellation/timer lifecycle
+  shared by client/request timeouts and the existing optional `TimeoutInterceptor`.
+  An overall timeout wraps the entire interceptor pipeline through body cleanup;
+  per-request values override client defaults, while explicit middleware remains
+  independently active. Custom HttpClient implementations must honor request timeout
+  metadata themselves. HTTP error statuses remain responses unless explicitly rejected.
+- `FormData` reuses the multipart encoder. Native file extensions live behind
+  `io.dart`, stream files, and deliberately mark those uploads as one-shot.
+- `testing.dart` owns client fixtures, event-driven request waits and response
+  flushing. It imports no test framework; tests must verify before closing it.
+- Download/SSE extensions stay behind their respective optional barrels. Flutter's
+  notifier loader constructor owns its resource and starts only on explicit refresh.
+
 1. A named registration describes options and how to create an owned transport.
 2. Logical clients retain the registration's options snapshot.
-3. The client resolves relative URIs and merges headers, then executes operation
-   interceptors in registration order. Responses unwind in reverse order.
-4. Retry/auth/routing middleware can dispatch additional attempts. Each dispatch
-   runs `attemptInterceptors`, then optional events, then the transport lease.
+3. The client resolves relative URIs and merges headers, then executes the single
+   `interceptors` list in registration order. Responses unwind in reverse order.
+4. Retry/auth/routing middleware can call `next` again, repeating only the
+   downstream interceptors. Put whole-operation policies before resenders and
+   per-send policies after all resenders. Every transport dispatch rechecks client
+   availability and cancellation, then runs optional events and the transport lease.
 5. The factory lazily creates a transport and rotates it on a subsequent dispatch
    after its configured lifetime. Even existing logical clients use the new lease.
 6. A lease remains active until its response body is consumed or disposed. Retired

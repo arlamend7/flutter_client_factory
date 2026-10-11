@@ -1,12 +1,12 @@
 // ignore_for_file: unused_import
-import 'package:flutter_client/authentication.dart';
-import 'package:flutter_client/caching.dart';
-import 'package:flutter_client/diagnostics.dart';
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/resilience.dart';
-import 'package:flutter_client/resources.dart';
-import 'package:flutter_client/sse.dart';
-import 'package:flutter_client/websocket.dart';
+import 'package:flutter_client_factory/authentication.dart';
+import 'package:flutter_client_factory/caching.dart';
+import 'package:flutter_client_factory/diagnostics.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/resilience.dart';
+import 'package:flutter_client_factory/resources.dart';
+import 'package:flutter_client_factory/sse.dart';
+import 'package:flutter_client_factory/websocket.dart';
 
 Future<void> main(List<String> arguments) async {
   if (arguments.isEmpty) throw ArgumentError('Provide an HTTP endpoint.');

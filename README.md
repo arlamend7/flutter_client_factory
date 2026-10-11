@@ -1,42 +1,37 @@
-# flutter_client
+# flutter_client_factory
 
 Dependency-free networking for Dart and Flutter: named and typed HTTP clients,
 shared transport lifetimes, streaming bodies, and opt-in policies.
 
-**Development preview.** MIT licensed. Publication is disabled while release
-validation and repository metadata are completed. Requires Dart 3.4 or newer
+**Version 1.0.0.** MIT licensed. Requires Dart 3.4 or newer
 (below Dart 4); older Flutter releases whose Dart SDK predates 3.4 cannot use it.
-The proposed public name is `flutter_client_factory`, pending the owner's choice.
+Repository: [arlamend7/flutter_client_factory](https://github.com/arlamend7/flutter_client_factory).
 
 ## Quick start
 
-Until publication, use a local path dependency:
+For this checkout, use a local path dependency. After 1.0.0 is published, use
+`flutter_client_factory: ^1.0.0`:
 
 ```yaml
 dependencies:
-  flutter_client:
-    path: /path/to/flutter_client
+  flutter_client_factory:
+    path: /path/to/flutter_client_factory
 ```
 
 ```dart
-import 'package:flutter_client/flutter_client.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
 
-Future<String> load(Uri endpoint) async {
+Future<void> main() async {
   final factory = DefaultHttpClientFactory();
-  factory.register('api', ClientRegistration(
-    createTransport: createPlatformTransport,
-    options: HttpClientOptions(baseUri: endpoint),
-  ));
-  final client = factory.create('api');
+  factory.registerClient('api',
+      baseUrl: 'https://jsonplaceholder.typicode.com/',
+      timeout: const Duration(seconds: 10));
+
   try {
-    final response = await client.send(HttpRequest(uri: Uri.parse('status')));
-    if (!response.isSuccessful) {
-      await response.dispose();
-      throw StateError('HTTP ${response.statusCode}');
-    }
-    return const ResponseBodyReader().readText(response);
+    final response = await factory.create('api').getAsync('todos/1');
+    await response.requireSuccess();
+    print(await response.readText());
   } finally {
-    client.dispose();
     await factory.close();
   }
 }
@@ -52,7 +47,7 @@ are exceptions. JSON decoding takes an explicit domain conversion callback.
 
 | Import suffix | Capability |
 | --- | --- |
-| `flutter_client.dart` | HTTP models, bodies, events, factory, middleware, platform transport |
+| `flutter_client_factory.dart` | HTTP models, bodies, events, factory, middleware, platform transport |
 | `io.dart` / `web.dart` | Native TLS/proxy configuration / browser Fetch options |
 | `resilience.dart` | Deadlines, retries, queue limits, circuit breaker, failover, hedging |
 | `authentication.dart` | Origin-scoped bearer authentication and coordinated refresh |
@@ -66,15 +61,22 @@ are exceptions. JSON decoding takes an explicit domain conversion callback.
 | `resources.dart` | Explicit refresh with cancellation of superseded reads |
 | `testing.dart` | Fake transport and pending-request testing controller |
 
-The optional [`flutter_client_widgets`](packages/flutter_client_widgets/README.md)
+The optional [`flutter_client_factory_widgets`](packages/flutter_client_factory_widgets/README.md)
 package provides a `ValueNotifier` adapter. The core imports no Flutter libraries
 and has **zero third-party runtime dependencies**. Optional imports allow focused
 APIs and tree shaking; they do not make pub download individual source files.
 
 ## Examples and guidance
 
+Start with the [documentation learning path](doc/README.md), from one request
+through tested application services to production policy composition.
+
+
+- [Advanced use cases](doc/advanced.md)
+- [Error handling and troubleshooting](doc/troubleshooting.md)
 - [Runnable examples](example/README.md): typed client, real local HTTP, policies,
   consumer tests, and Flutter UI.
+- [Request, response, form, testing, and timeout shortcuts](doc/conveniences.md)
 - [Usage and policy ordering](doc/usage.md)
 - [Migration from the existing ApiClient](doc/migration.md)
 - [Platform support and limits](doc/platforms.md)

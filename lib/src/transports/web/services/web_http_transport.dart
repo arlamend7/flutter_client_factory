@@ -139,6 +139,11 @@ class WebHttpTransport implements HttpTransport {
           onClose: () async {
             try {
               await reader?.cancel().toDart;
+            } catch (_) {
+              // An already-aborted Fetch stream can reject cancel(). The body
+              // carries the original cancellation/timeout; cleanup must not
+              // replace it with a browser AbortError.
+              if (!token.isCanceled) rethrow;
             } finally {
               reader?.releaseLock();
               finish();
@@ -164,12 +169,17 @@ class WebHttpTransport implements HttpTransport {
   Stream<List<int>> _read(
       BrowserStreamReader? reader, CancellationToken token) async* {
     if (reader == null) return;
-    while (true) {
-      token.throwIfCanceled();
-      final chunk = await token.race(reader.read().toDart);
-      if (chunk.done) return;
-      final value = chunk.value;
-      if (value != null) yield value.toDart;
+    try {
+      while (true) {
+        token.throwIfCanceled();
+        final chunk = await token.race(reader.read().toDart);
+        if (chunk.done) return;
+        final value = chunk.value;
+        if (value != null) yield value.toDart;
+      }
+    } catch (error, stack) {
+      if (token.isCanceled) Error.throwWithStackTrace(token.error, stack);
+      rethrow;
     }
   }
 

@@ -1,0 +1,10 @@
+.dart_tool/
+build/
+coverage/
+pubspec.lock
+test/
+doc/api/
+
+.widget_preview/
+
+**/pubspec_overrides.yaml

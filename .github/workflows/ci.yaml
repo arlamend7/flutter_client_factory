@@ -1,5 +1,9 @@
 name: Validate packages
-on: [push, pull_request]
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_call:
 permissions:
   contents: read
 jobs:
@@ -49,10 +53,10 @@ jobs:
         with:
           channel: stable
       - run: flutter pub get
-        working-directory: packages/flutter_client_widgets
+        working-directory: packages/flutter_client_factory_widgets
       - run: flutter pub get
-        working-directory: packages/flutter_client_widgets/example
-      - run: flutter analyze
-        working-directory: packages/flutter_client_widgets
+        working-directory: packages/flutter_client_factory_widgets/example
+      - run: flutter analyze lib test example/lib
+        working-directory: packages/flutter_client_factory_widgets
       - run: flutter test
-        working-directory: packages/flutter_client_widgets
+        working-directory: packages/flutter_client_factory_widgets

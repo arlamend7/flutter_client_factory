@@ -1,33 +1,17 @@
-import 'dart:convert';
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/testing.dart';
-import 'defaults/example_client_options.dart';
-import 'services/example_users_api.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
 
 Future<void> main() async {
   final factory = DefaultHttpClientFactory();
-  factory.register(
-    'users',
-    ClientRegistration(
-      options: ExampleClientOptions.create(),
-      createTransport: () =>
-          FakeHttpTransport((request, cancellationToken) async {
-        return HttpResponse.bytes(
-          statusCode: 200,
-          bytes: utf8.encode('{"id":1,"name":"Ada"}'),
-        );
-      }),
-    ),
-  );
-
-  final users = factory.createTyped('users', ExampleUsersApi.new);
+  factory.registerClient('api',
+      baseUrl: 'https://jsonplaceholder.typicode.com/',
+      timeout: const Duration(seconds: 10));
 
   try {
-    final user = await users.getById(1);
+    final response = await factory.create('api').getAsync('todos/1');
+    await response.requireSuccess();
     // ignore: avoid_print
-    print('${user.id}: ${user.name}');
+    print(await response.readText());
   } finally {
-    users.dispose();
     await factory.close();
   }
 }

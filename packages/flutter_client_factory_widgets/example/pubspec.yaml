@@ -1,0 +1,13 @@
+name: flutter_client_factory_widgets_example
+description: A local Flutter example showing cancellable resource state.
+publish_to: none
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_client_factory: ^1.0.0
+  flutter_client_factory_widgets:
+    path: ..
+flutter:
+  uses-material-design: true

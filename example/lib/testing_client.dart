@@ -1,18 +1,17 @@
-import 'dart:convert';
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/testing.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/testing.dart';
 
 Future<void> main() async {
   final controller = HttpTestingController();
-  final client = HttpClientService(transport: controller);
+  final client = controller.createClient(baseUrl: 'https://example.invalid/');
   try {
-    final pending = client
-        .send(HttpRequest(uri: Uri.parse('https://example.invalid/users')));
-    controller.expectOne('https://example.invalid/users').flush(
-        HttpResponse.bytes(statusCode: 200, bytes: utf8.encode('["Ada"]')));
+    final pending = client.getAsync('users');
+    final request = await controller.waitForOne('https://example.invalid/users',
+        method: HttpMethod.get);
+    request.flushJson(['Ada']);
     final response = await pending;
     // ignore: avoid_print
-    print(await const ResponseBodyReader().readText(response));
+    print(await response.readJson(decode: (json) => json));
     controller.verify();
   } finally {
     client.dispose();

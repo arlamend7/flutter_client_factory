@@ -11,12 +11,12 @@ Release work proceeds in this order:
 3. Resolve and test with the minimum Dart SDK independently of the latest lockfile.
 4. Review generated API docs, examples, supported-platform claims, package contents
    and representative release artifact sizes.
-5. Confirm the public package name. The owner creates its public GitHub repository.
-6. Add real repository, issue tracker and documentation links. Audit both packages
+5. Public name/repository confirmed: `arlamend7/flutter_client_factory`.
+6. Repository and issue tracker links are configured. Audit both packages
    with pana and pub's dry run; fix actionable findings.
-7. Replace the adapter's local path dependency with the published core version and
-   repeat validation. The core must be published before its dependent adapter.
-8. Enable publication only for the reviewed release. Tag releases and maintain a
+7. The adapter manifest targets core ^1.0.0. Validate without local overrides after
+   the core is published, then publish the adapter when authorized.
+8. Manifests are prepared for 1.0.0; publication/tagging is not automatic. Maintain a
    changelog and compatibility matrix.
 
 Tests target observable behavior and edge cases; they are not a proof of all possible

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/web.dart';
-import 'package:flutter_client/websocket_web.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/web.dart';
+import 'package:flutter_client_factory/websocket_web.dart';
 
 import 'browser_test_body.dart';
 
@@ -29,6 +29,23 @@ Future<void> main() async {
         (json) => json as Map<String, dynamic>);
     check(echo['body'] == 'upload', 'upload body');
     check(echo['xsrf'] == 'test-token', 'same-origin XSRF');
+    final convenienceResponse = await client.postAsync(
+        base.resolve('/echo').toString(),
+        body: FormData(fields: {'name': 'Ada'}),
+        timeout: const Duration(seconds: 5));
+    final convenienceJson = await convenienceResponse.readJson(
+        decode: (json) => json as Map<String, dynamic>);
+    check((convenienceJson['body'] as String).contains('Ada'),
+        'multipart shortcut');
+    var timedOut = false;
+    try {
+      final response = await client.getAsync(base.resolve('/stream').toString(),
+          timeout: const Duration(milliseconds: 100));
+      await response.readText();
+    } on RequestTimeoutException {
+      timedOut = true;
+    }
+    check(timedOut, 'overall timeout aborts browser response');
     final cross = await reader.readJson<Map<String, dynamic>>(
         await client.send(HttpRequest(
             uri: Uri.parse(config['cross'] as String).resolve('/echo'),

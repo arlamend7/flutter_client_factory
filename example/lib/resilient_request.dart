@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/resilience.dart';
-import 'package:flutter_client/testing.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/resilience.dart';
+import 'package:flutter_client_factory/testing.dart';
 
 Future<void> main() async {
   var attempts = 0;
@@ -21,9 +21,8 @@ Future<void> main() async {
         ],
       ));
   try {
-    final response = await client
-        .send(HttpRequest(uri: Uri.parse('https://example.invalid/status')));
-    final text = await const ResponseBodyReader().readText(response);
+    final response = await client.getAsync('https://example.invalid/status');
+    final text = await response.readText();
     // ignore: avoid_print
     print('$text after $attempts attempts');
   } finally {

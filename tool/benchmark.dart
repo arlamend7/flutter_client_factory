@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/testing.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/testing.dart';
 
 Future<void> main() async {
   await _streamMemory();

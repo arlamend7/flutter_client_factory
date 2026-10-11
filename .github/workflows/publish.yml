@@ -1,0 +1,30 @@
+name: Publish core to pub.dev
+
+on:
+  push:
+    tags: ['flutter_client_factory-v[0-9]+.[0-9]+.[0-9]+*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-core-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 tool/verify_release_tag.py .
+  validate:
+    needs: check-tag
+    uses: ./.github/workflows/ci.yaml
+  publish:
+    needs: validate
+    permissions:
+      contents: read
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1

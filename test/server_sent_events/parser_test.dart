@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_client/sse.dart';
+import 'package:flutter_client_factory/sse.dart';
 import 'package:test/test.dart';
 
 void main() {

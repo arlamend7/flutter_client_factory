@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io' as io;
-import 'package:flutter_client/flutter_client.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
 
 Future<void> main() async {
   final server = await io.HttpServer.bind(io.InternetAddress.loopbackIPv4, 0);
@@ -10,18 +10,16 @@ Future<void> main() async {
     await request.response.close();
   });
   final factory = DefaultHttpClientFactory();
-  factory.register(
-      'local',
-      ClientRegistration(
-        createTransport: createPlatformTransport,
-        options: HttpClientOptions(
-            baseUri: Uri.parse('http://127.0.0.1:${server.port}/')),
-      ));
+  factory.registerClient(
+    'local',
+    baseUrl: 'http://127.0.0.1:${server.port}/',
+    defaultHeaders: {'Accept': 'application/json'},
+  );
   final client = factory.create('local');
   try {
-    final response = await client.send(HttpRequest(uri: Uri.parse('greeting')));
-    final message =
-        await const ResponseBodyReader().readJson<String>(response, (value) {
+    final response =
+        await client.getAsync('greeting', timeout: const Duration(seconds: 5));
+    final message = await response.readJson<String>(decode: (value) {
       if (value is! Map<String, dynamic> || value['message'] is! String) {
         throw const FormatException('Expected a message.');
       }

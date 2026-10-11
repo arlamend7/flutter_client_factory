@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a reproducible problem in the core or Flutter adapter.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Remove credentials, tokens, and personal data from examples and logs.
+        For security vulnerabilities, follow SECURITY.md instead of a public issue.
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - flutter_client_factory
+        - flutter_client_factory_widgets
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Dart/Flutter versions, OS/device or browser, and JS/Wasm target when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include setup, request, interceptor ordering, and exact steps. A failing test is ideal.
+      render: dart
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and sanitized logs
+    validations:
+      required: true

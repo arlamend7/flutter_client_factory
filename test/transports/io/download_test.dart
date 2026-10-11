@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io' as io;
 
-import 'package:flutter_client/downloads.dart';
-import 'package:flutter_client/flutter_client.dart';
-import 'package:flutter_client/io.dart';
+import 'package:flutter_client_factory/downloads.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
+import 'package:flutter_client_factory/io.dart';
 import 'package:test/test.dart';
 
 void main() {

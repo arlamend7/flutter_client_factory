@@ -1,5 +1,5 @@
-import 'package:flutter_client/authentication.dart';
-import 'package:flutter_client/flutter_client.dart';
+import 'package:flutter_client_factory/authentication.dart';
+import 'package:flutter_client_factory/flutter_client_factory.dart';
 
 class CountingTokenProvider implements TokenProvider {
   String current = 'old';

@@ -8,6 +8,7 @@ import '../events/models/request_sent_event.dart';
 import '../events/models/response_completed_event.dart';
 import '../events/models/response_headers_event.dart';
 import '../events/models/upload_progress_event.dart';
+import '../helpers/request_deadline.dart';
 import '../helpers/request_uri_resolver.dart';
 import '../middleware/contracts/http_request_handler.dart';
 import '../models/http_request.dart';
@@ -41,7 +42,7 @@ class HttpClientService implements HttpClient {
     token.throwIfCanceled();
 
     final prepared = _prepare(request);
-    HttpRequestHandler handler = _dispatch;
+    HttpRequestHandler handler = _sendTransport;
 
     for (final interceptor in _options.interceptors.reversed) {
       final next = handler;
@@ -49,7 +50,9 @@ class HttpClientService implements HttpClient {
           (current, cancellation) => interceptor(current, cancellation, next);
     }
 
-    return handler(prepared, token);
+    final timeout = prepared.timeout ?? _options.timeout;
+    if (timeout == null) return handler(prepared, token);
+    return RequestDeadline(timeout).run(prepared, token, handler);
   }
 
   HttpRequest _prepare(HttpRequest request) {
@@ -64,23 +67,10 @@ class HttpClientService implements HttpClient {
     return request.copyWith(uri: uri, headers: headers);
   }
 
-  Future<HttpResponse> _dispatch(
-    HttpRequest request,
-    CancellationToken token,
-  ) async {
-    _ensureAvailable();
-    token.throwIfCanceled();
-    HttpRequestHandler handler = _sendTransport;
-    for (final interceptor in _options.attemptInterceptors.reversed) {
-      final next = handler;
-      handler =
-          (current, cancellation) => interceptor(current, cancellation, next);
-    }
-    return handler(request, token);
-  }
-
   Future<HttpResponse> _sendTransport(
       HttpRequest request, CancellationToken token) async {
+    _ensureAvailable();
+    token.throwIfCanceled();
     final observer = _options.onEvent;
     if (observer == null) return _transport.send(request, token);
     observer(RequestSentEvent(request.uri));

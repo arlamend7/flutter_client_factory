@@ -1,0 +1,52 @@
+name: Package quality audit
+on:
+  workflow_dispatch:
+    inputs:
+      audit_adapter:
+        description: Audit the adapter after core 1.0.0 is available on pub.dev
+        required: false
+        default: false
+        type: boolean
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - run: dart pub global activate pana
+      - name: Audit disposable core copy
+        run: |
+          mkdir -p "$RUNNER_TEMP/client-audit"
+          tar --exclude=.git --exclude=.dart_tool --exclude=build --exclude=packages --exclude=doc/api --exclude='*.docx' -cf - . | tar -xf - -C "$RUNNER_TEMP/client-audit"
+          dart pub global run pana --json --exit-code-threshold 0 "$RUNNER_TEMP/client-audit" > pana-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-package-quality
+          path: pana-report.json
+  adapter:
+    if: ${{ inputs.audit_adapter }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: dart pub global activate pana
+      - name: Audit with hosted core dependency
+        run: |
+          mkdir -p "$RUNNER_TEMP/adapter-audit"
+          cp -R packages/flutter_client_factory_widgets/. "$RUNNER_TEMP/adapter-audit/"
+          rm -f "$RUNNER_TEMP/adapter-audit/pubspec_overrides.yaml" "$RUNNER_TEMP/adapter-audit/example/pubspec_overrides.yaml"
+          dart pub global run pana --json --exit-code-threshold 0 --flutter-sdk "$FLUTTER_ROOT" "$RUNNER_TEMP/adapter-audit" > pana-widgets-report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: adapter-package-quality
+          path: pana-widgets-report.json

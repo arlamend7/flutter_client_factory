@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 const [url] = process.argv.slice(2);
 if (!url) throw new Error('Usage: node tool/run_browser_test.mjs http://localhost:PORT/');
-const profile = await mkdtemp(path.join(os.tmpdir(), 'flutter-client-chrome-'));
+const profile = await mkdtemp(path.join(os.tmpdir(), 'flutter-client-factory-chrome-'));
 const chrome = process.env.CHROME_EXECUTABLE ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const child = spawn(chrome, ['--headless','--disable-gpu',`--user-data-dir=${profile}`,'--remote-debugging-port=0','about:blank'], {stdio:'ignore'});
 let socket;

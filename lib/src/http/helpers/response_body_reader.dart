@@ -12,9 +12,9 @@ class ResponseBodyReader {
 
   /// Returns an immutable compact byte buffer; throws when [maxBytes] is exceeded.
   Future<List<int>> readBytes(HttpResponse response) async {
-    if (maxBytes < 0) throw ArgumentError.value(maxBytes, 'maxBytes');
     final bytes = BytesBuilder();
     try {
+      if (maxBytes < 0) throw ArgumentError.value(maxBytes, 'maxBytes');
       await for (final chunk in response.body) {
         if (bytes.length + chunk.length > maxBytes) {
           throw StateError(

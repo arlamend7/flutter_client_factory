@@ -8,7 +8,7 @@ fixture_tmp=$(mktemp -d)
 trap 'rm -rf "$fixture_tmp"' EXIT
 openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 3650 \
   -keyout "$fixture_tmp/ca.key" -out "$fixture_dir/ca.crt" \
-  -subj '/CN=flutter_client test CA' \
+  -subj '/CN=flutter_client_factory test CA' \
   -addext 'basicConstraints=critical,CA:TRUE' \
   -addext 'keyUsage=critical,keyCertSign,cRLSign' 2>/dev/null
 openssl req -newkey rsa:2048 -nodes -sha256 \

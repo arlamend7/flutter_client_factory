@@ -7,20 +7,28 @@ class HttpClientOptions {
   HttpClientOptions({
     this.baseUri,
     this.onEvent,
-    List<HttpInterceptor> attemptInterceptors = const [],
+    this.timeout,
     HttpHeaders? headers,
     List<HttpInterceptor> interceptors = const <HttpInterceptor>[],
   })  : headers = headers ?? HttpHeaders(),
-        attemptInterceptors = List.unmodifiable(attemptInterceptors),
-        interceptors = List<HttpInterceptor>.unmodifiable(interceptors);
+        interceptors = List<HttpInterceptor>.unmodifiable(interceptors) {
+    if (timeout != null && timeout! <= Duration.zero) {
+      throw ArgumentError.value(timeout, 'timeout', 'Must be positive');
+    }
+  }
 
+  /// Default overall deadline; null leaves requests without an overall deadline.
+  /// Per-request values override this, but independent middleware still applies.
+  final Duration? timeout;
   final Uri? baseUri;
   final void Function(HttpEvent)? onEvent;
 
-  /// Outermost-first middleware run on each dispatch through the client.
-  final List<HttpInterceptor> attemptInterceptors;
   final HttpHeaders headers;
 
-  /// Outermost-first middleware for a logical operation, including all retries.
+  /// One outermost-first pipeline; responses unwind in reverse order.
+  ///
+  /// Interceptors that resend a request repeat only the downstream pipeline.
+  /// Place a policy before retry/auth refresh to surround its work, or after it
+  /// to run again on each resend. Place per-send policies after all resenders.
   final List<HttpInterceptor> interceptors;
 }

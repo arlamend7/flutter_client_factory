@@ -38,6 +38,29 @@ network/cancellation/decode failures throw. If existing presentation code needs
 Keep original causes and stack traces rather than reducing them to a message string.
 
 Move a timeout value into a TimeoutInterceptor. Place it outside retries for a total
-budget or in attemptInterceptors for a fresh budget per attempt. Keep separate
+budget or after the retry interceptor for a fresh budget per attempt. Keep separate
 factories/coordinators/cookie jars for unrelated authenticated sessions. Test the
 migrated service with HttpTestingController before replacing production call sites.
+
+## Consolidating the preview interceptor configuration
+
+`HttpClientOptions.attemptInterceptors` has been removed. There is now one
+`interceptors` list with the same generic `HttpInterceptor` contract. Append the
+former attempt list after the existing interceptors, preserving both lists' order:
+
+```dart
+HttpClientOptions(
+  interceptors: [
+    overall.intercept,
+    retry.intercept,
+    authentication.intercept,
+    attempt.intercept,
+    logging.intercept,
+  ],
+);
+```
+
+Retry and authentication refresh repeat only what follows them. In this example,
+the attempt timeout and logging run on every send, including authentication replay.
+The overall policy runs around the whole operation. No separate interceptor types,
+execution modes, or second configuration list are required.

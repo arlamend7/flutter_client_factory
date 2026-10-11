@@ -1,6 +1,6 @@
 name: flutter_client_factory
 description: Dependency-free HTTP client factory for Dart and Flutter with streaming, native and browser transports, and optional resilience policies.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/arlamend7/flutter_client_factory
 repository: https://github.com/arlamend7/flutter_client_factory
 issue_tracker: https://github.com/arlamend7/flutter_client_factory/issues

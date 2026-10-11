@@ -28,7 +28,9 @@ jobs:
         run: dart doc
   browser:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
+      fail-fast: false
       matrix:
         sdk: ['3.4.4', stable]
     steps:
@@ -41,9 +43,15 @@ jobs:
           node-version: '22'
       - uses: browser-actions/setup-chrome@v1
         id: chrome
+        with:
+          chrome-version: stable
+          install-dependencies: true
       - run: dart pub get
+      - run: node --test tool/run_browser_test_test.mjs
       - run: bash tool/verify_browser.sh
         env:
+          # Only local fixtures run in this disposable hosted runner.
+          CHROME_NO_SANDBOX: 'true'
           CHROME_EXECUTABLE: ${{ steps.chrome.outputs.chrome-path }}
   flutter:
     runs-on: ubuntu-latest

@@ -6,11 +6,23 @@ const [url] = process.argv.slice(2);
 if (!url) throw new Error('Usage: node tool/run_browser_test.mjs http://localhost:PORT/');
 const profile = await mkdtemp(path.join(os.tmpdir(), 'flutter-client-factory-chrome-'));
 const chrome = process.env.CHROME_EXECUTABLE ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const child = spawn(chrome, ['--headless','--disable-gpu',`--user-data-dir=${profile}`,'--remote-debugging-port=0','about:blank'], {stdio:'ignore'});
+const args = ['--headless','--disable-gpu',`--user-data-dir=${profile}`,'--remote-debugging-port=0','about:blank'];
+// Opt in only for disposable CI runners that cannot use Chrome's Linux sandbox.
+if (process.env.CHROME_NO_SANDBOX === 'true') args.unshift('--no-sandbox');
+const child = spawn(chrome, args, {stdio:['ignore','ignore','inherit']});
+let spawnError;
+const exited = new Promise(resolve => {
+  child.once('exit', resolve);
+  child.once('error', error => { spawnError = error; resolve(); });
+});
 let socket;
 try {
   let port;
   for (let i=0;i<100;i++) {
+    if (spawnError) throw new Error(`Could not launch Chrome: ${spawnError.message}`);
+    if (child.exitCode !== null || child.signalCode !== null) {
+      throw new Error(`Chrome exited before startup (code ${child.exitCode}, signal ${child.signalCode}); see browser stderr above.`);
+    }
     try { port=(await readFile(path.join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0]; break; }
     catch { await new Promise(resolve=>setTimeout(resolve,100)); }
   }
@@ -33,6 +45,6 @@ try {
   console.log(`PASS browser integration: ${url}`);
 } finally {
   socket?.close(); child.kill();
-  await new Promise(resolve=>child.on('exit',resolve));
+  await exited;
   await rm(profile,{recursive:true,force:true});
 }

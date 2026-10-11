@@ -2,7 +2,7 @@ name: Publish Flutter adapter to pub.dev
 
 on:
   push:
-    tags: ['flutter_client_factory_widgets-v[0-9]+.[0-9]+.[0-9]+*']
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
 
 permissions:
   contents: read

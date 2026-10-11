@@ -1,0 +1,58 @@
+name: Validate packages
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: ['3.4.4', stable]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - run: dart pub get
+      - run: dart analyze lib test example tool
+      - run: bash tool/generate_test_certificates.sh
+      - run: dart test
+      - run: python3 tool/check_structure.py
+      - if: matrix.sdk == 'stable'
+        run: dart format --output=none --set-exit-if-changed lib test example tool
+      - if: matrix.sdk == 'stable'
+        run: dart doc
+  browser:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: ['3.4.4', stable]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+      - run: dart pub get
+      - run: bash tool/verify_browser.sh
+        env:
+          CHROME_EXECUTABLE: ${{ steps.chrome.outputs.chrome-path }}
+  flutter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter pub get
+        working-directory: packages/flutter_client_widgets
+      - run: flutter pub get
+        working-directory: packages/flutter_client_widgets/example
+      - run: flutter analyze
+        working-directory: packages/flutter_client_widgets
+      - run: flutter test
+        working-directory: packages/flutter_client_widgets

@@ -1,0 +1,16 @@
+.dart_tool/
+.git/
+.github/
+build/
+coverage/
+pubspec.lock
+packages/
+test/
+tool/
+AGENTS.md
+analysis-report.json
+doc/api/
+.DS_Store
+
+# Local document attachments are not package assets.
+*.docx

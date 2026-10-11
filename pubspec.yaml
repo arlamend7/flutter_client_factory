@@ -1,0 +1,10 @@
+name: flutter_client
+description: Dependency-free HTTP client factory for Dart and Flutter with streaming, native and browser transports, and optional resilience policies.
+version: 0.1.0-dev.1
+publish_to: none
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dev_dependencies:
+  test: ^1.24.0

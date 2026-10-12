@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 
+
+- Fix building and resolution of packages
+
 ## 1.0.0
 
 - Provide `HttpResourceNotifier<T>` to expose core resource state to Flutter.

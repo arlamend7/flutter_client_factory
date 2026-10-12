@@ -1,6 +1,6 @@
-# Releasing 1.0.0 and checking package quality
+# Releasing 1.0.2 and checking package quality
 
-Both package manifests are version 1.0.0 and prepared for publication. Preparing
+Both package manifests are version 1.0.2 and prepared for publication. Preparing
 metadata does not publish packages or create a Git tag. MIT licensing is selected.
 Repository: https://github.com/arlamend7/flutter_client_factory.
 
@@ -55,10 +55,10 @@ publication workflows publish only on matching package version tags.
 
 ## Release order
 
-1. Review and push source and both matching 1.0.0 manifests to GitHub.
+1. Review and push source and both matching 1.0.2 manifests to GitHub.
 2. Rerun package audits and inspect every unresolved report item.
 3. Validate the core dry run; publish only when explicitly authorized.
-4. After core 1.0.0 is hosted, validate the adapter without dependency overrides.
+4. After a compatible core release is hosted, validate the adapter without dependency overrides.
    Resolve flutter_client_factory ^1.0.0 from pub.dev.
 5. Repeat adapter analysis/tests/audit/dry run with hosted dependencies, then
    publish it only when explicitly authorized.

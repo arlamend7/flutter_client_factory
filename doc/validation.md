@@ -3,6 +3,20 @@
 For the latest 1.0.0 scores, archive checks, and release prerequisites, see the
 [release audit](release_audit.md). The entries below preserve earlier checkpoints.
 
+## Documentation and examples 1.0.2 — 2026-10-11
+
+The default example now injects a client into `UserService` and leaves status
+validation and typed/text decoding to the caller. Registration includes diagnostic
+logging, a JSON Accept header, and an overall timeout. A separate application
+sign-in recipe demonstrates model conversion before session storage/navigation.
+
+- Core analysis and all 79 tests passed, including nine new example/service tests.
+- The default example completed real typed and text requests to JSONPlaceholder.
+- Formatting, structure checks (189 Dart files), and local documentation file and
+  heading links passed.
+- No public core API or runtime dependency changed. Version metadata is 1.0.2 for
+  both packages; this entry does not claim a new hosted pub score or publication.
+
 ## Publication workflow checks — 2026-10-11
 
 The docs deployment and separate core/adapter publishing workflows passed

@@ -15,6 +15,8 @@ class ExampleUser {
     return ExampleUser(id: id, name: name);
   }
 
+  Map<String, Object?> toJson() => {'id': id, 'name': name};
+
   final int id;
   final String name;
 }

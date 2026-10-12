@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2
+
+- Reorganize documentation into practical, linked use-case recipes.
+- Demonstrate client injection, explicit HTTP status validation, typed JSON and
+  plain-text responses in the default service example.
+- Include built-in logging, JSON Accept headers, timeouts, interceptor ordering,
+  and deterministic service tests. No core API changes or runtime dependencies.
+
 ## 1.0.1
 
 Fix building and resolving the action

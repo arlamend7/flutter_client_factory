@@ -1,12 +1,13 @@
 # Documentation learning path
 
-The package is version 1.0.0. Its core has no third-party runtime dependencies and
+The package is version 1.0.2. Its core has no third-party runtime dependencies and
 requires Dart >=3.4.0 <4.0.0. Publication status and verified checks are recorded
 separately in [release guidance](releasing.md) and [validation](validation.md).
 
 | Level / use case | Start here | Runnable example |
 | --- | --- | --- |
-| First GET request | [README quick start](../README.md#quick-start) | [main.dart](../example/lib/main.dart) |
+| Application service and sign-in | [Injection, validation and application state](application_services.md) | [UserService](../example/lib/services/user_service.dart) |
+| First GET request | [README quick start](../README.md#quick-start-configure-a-client) | [main.dart](../example/lib/main.dart) |
 | Deterministic local HTTP | [Requests and readers](conveniences.md) | [local_http.dart](../example/lib/local_http.dart) |
 | Typed application service | [Advanced composition](advanced.md#typed-services-and-ownership) | [typed_client.dart](../example/lib/typed_client.dart) |
 | Headers, query, JSON, forms, uploads | [Convenience APIs](conveniences.md) | [Core regression examples](../test/http/services/convenience_test.dart) |

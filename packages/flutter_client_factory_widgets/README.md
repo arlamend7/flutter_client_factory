@@ -22,6 +22,6 @@ not own the HTTP client/factory. Refresh is explicit and cancels superseded read
 
 See the [runnable Flutter example](example/README.md). Run `flutter pub get`,
 `flutter analyze lib test example/lib`, and `flutter test` in this directory. MIT licensed. Release
-version 1.0.0. The manifest uses `flutter_client_factory: ^1.0.0`; checkout-only
+version 1.0.2. The manifest uses `flutter_client_factory: ^1.0.0`; checkout-only
 `pubspec_overrides.yaml` files resolve the local core during development. Publish
-the core first. No publishing action is performed by this repository setup. Dart 3.4+ is required.
+the core first. Publication is triggered only by package version tags after pub.dev setup. Dart 3.4+ is required.

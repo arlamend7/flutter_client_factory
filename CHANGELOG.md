@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+Fix building and resolving the action
+
 ## 1.0.0
 
 Initial stable-version API for the dependency-free Dart networking core.

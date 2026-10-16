@@ -2,7 +2,7 @@
 
 Build reusable HTTP services for Dart and Flutter with named clients, shared
 connections, explicit response handling, and composable interceptors. The pure
-Dart core has **zero third-party runtime dependencies**. Version **1.0.2**, MIT.
+Dart core has **zero third-party runtime dependencies**. Version **1.0.3**, MIT.
 
 ## Contents
 
@@ -30,10 +30,10 @@ Dart core has **zero third-party runtime dependencies**. Version **1.0.2**, MIT.
 
 ```yaml
 dependencies:
-  flutter_client_factory: ^1.0.2
+  flutter_client_factory: ^1.0.3
 ```
 
-Use this constraint once 1.0.2 is published. To try this source checkout first,
+Use this constraint once 1.0.3 is published. To try this source checkout first,
 replace the version with `path: /path/to/flutter_client_factory`.
 Requires Dart **>=3.4.0 <4.0.0**, including Flutter versions that bundle a compatible
 Dart SDK. No Flutter dependency is needed for the core. Browser HTTP uses Fetch;
@@ -300,7 +300,7 @@ factory.registerClient(
   defaultHeaders: {'Accept': 'application/json'},
   transportLifetime: const Duration(minutes: 5),
   configure: (client) {
-    client.defaultHeaders['X-App-Version'] = '1.0.2';
+    client.defaultHeaders['X-App-Version'] = '1.0.3';
   },
 );
 ```

@@ -1,4 +1,4 @@
 import 'package:flutter/material.dart';
-import 'resource_demo.dart';
+import 'client_example_app.dart';
 
-void main() => runApp(const MaterialApp(home: ResourceDemo()));
+void main() => runApp(const ClientExampleApp());

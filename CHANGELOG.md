@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3
+
+- Fix the pub.dev Example tab by adding the higher-priority `example/example.md`.
+- Show complete client registration, service injection, logging, timeout, HTTP
+  validation, typed JSON and text parsing together.
+- Add an informational example reference to the pubspec and offline validation
+  instructions. No public API or runtime dependency changes.
+
 ## 1.0.2
 
 - Reorganize documentation into practical, linked use-case recipes.

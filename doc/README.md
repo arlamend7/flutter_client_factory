@@ -1,6 +1,6 @@
 # Documentation learning path
 
-The package is version 1.0.2. Its core has no third-party runtime dependencies and
+The package is version 1.0.3. Its core has no third-party runtime dependencies and
 requires Dart >=3.4.0 <4.0.0. Publication status and verified checks are recorded
 separately in [release guidance](releasing.md) and [validation](validation.md).
 

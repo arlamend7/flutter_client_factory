@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3
+
+- Replace the simulated-read example with a real HTTP user-profile screen,
+  including registration, logging, timeout, service injection, status checks,
+  typed decoding, loading/error/data states, refresh, retry and disposal.
+- Add a complete pub.dev example page and an informational pubspec reference.
+- Test successful loads, refresh, HTTP error recovery and request cancellation.
+- No Flutter adapter API or runtime behavior changes.
+
 ## 1.0.2
 
 - Reorganize documentation into practical, linked use-case recipes.

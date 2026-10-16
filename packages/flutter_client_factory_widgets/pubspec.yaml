@@ -1,9 +1,11 @@
 name: flutter_client_factory_widgets
-version: 1.0.2
+version: 1.0.3
 description: Optional Flutter resource state adapters for flutter_client_factory.
 homepage: https://github.com/arlamend7/flutter_client_factory
 repository: https://github.com/arlamend7/flutter_client_factory
 issue_tracker: https://github.com/arlamend7/flutter_client_factory/issues
+# Informational reference; pub.dev selects example/example.md by filename.
+example: example/example.md
 funding:
   - https://www.buymeacoffee.com/arlamend7
 topics:

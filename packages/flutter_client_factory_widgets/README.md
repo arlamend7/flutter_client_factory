@@ -22,6 +22,19 @@ not own the HTTP client/factory. Refresh is explicit and cancels superseded read
 
 See the [runnable Flutter example](example/README.md). Run `flutter pub get`,
 `flutter analyze lib test example/lib`, and `flutter test` in this directory. MIT licensed. Release
-version 1.0.2. The manifest uses `flutter_client_factory: ^1.0.0`; checkout-only
+version 1.0.3. The manifest uses `flutter_client_factory: ^1.0.0`; checkout-only
 `pubspec_overrides.yaml` files resolve the local core during development. Publish
 the core first. Publication is triggered only by package version tags after pub.dev setup. Dart 3.4+ is required.
+
+
+## Complete user-profile example
+
+The [pub.dev example source](example/example.md) contains a real HTTP application:
+client registration with logging, JSON headers and a timeout; an injected service;
+explicit status validation and model conversion; and loading/error/data UI with
+refresh and retry. Requests cancel when superseded or when the screen is removed.
+
+Follow the [runner instructions](example/README.md) to launch it. Widget tests use
+an injected fake backend, so error and cancellation cases run without internet.
+The example reference in the pubspec is informational; pub.dev selects
+`example/example.md` through its filename convention.

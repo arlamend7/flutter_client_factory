@@ -1,4 +1,7 @@
-# Examples — 1.0.2
+# Examples — 1.0.3
+
+Pub.dev displays [example.md](example.md), which includes the registration, service,
+and model together. Keep its code blocks synchronized with the runnable source files.
 
 Run from the repository root after `dart pub get`:
 
